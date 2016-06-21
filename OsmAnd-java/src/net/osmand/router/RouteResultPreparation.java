@@ -472,8 +472,8 @@ public class RouteResultPreparation {
 			TurnType currentTurn = currentSegment.getTurnType();
 			dist += currentSegment.getDistance();
 
-			//Issue 2571: Ignore turnType.C if immediately followed by another turn in non-motorway cases, as these likely belong to the very same intersection
-			if (nextSegment != null && nextSegm.getTurnType() != TurnType.C && currentSegment.getTurnType() == TurnType.C && (dist <= 70) && !isMotorway(currentSegment)) {
+			//Issue 2571: Ignore TurnType.C if immediately followed by another turn in non-motorway cases, as these likely belong to the very same intersection
+			if (nextSegment != null && !nextSegment.getTurnType().valueOf(TurnType.C, leftside) && currentSegment.getTurnType().valueOf(TurnType.C, leftside) && (dist <= 70) && !isMotorway(currentSegment)) {
 				currentSegment.getTurnType().setSkipToSpeak(true);
 			}
 
@@ -923,9 +923,6 @@ public class RouteResultPreparation {
 				}
 			}
 		}
-		// Issue 2571
-		// Is caused by not suppressing 'ghost turns' (rs.speak=false), either when lanes split with no action (go straight), or where a subsequent "regular" turn at the end of the turn lane will be announced anyway
-		// Having rs.speak=true in these cases inserts an extra intermediate route direction to "continue" (to the point of the ghost turn)
 		t.setSkipToSpeak(!rs.speak);
 		t.setLanes(rawLanes);
 		return t;
