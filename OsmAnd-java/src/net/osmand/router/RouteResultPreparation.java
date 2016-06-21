@@ -473,7 +473,7 @@ public class RouteResultPreparation {
 			dist += currentSegment.getDistance();
 
 			//Issue 2571: Ignore TurnType.C if immediately followed by another turn in non-motorway cases, as these likely belong to the very same intersection
-			if (nextSegment != null && !nextSegment.getTurnType().valueOf(TurnType.C, leftside) && currentSegment.getTurnType().valueOf(TurnType.C, leftside) && (dist <= 70) && !isMotorway(currentSegment)) {
+			if (nextSegment != null && nextSegment.getTurnType().getValue() != TurnType.C && currentSegment.getTurnType().getValue() == TurnType.C && dist <= 70 && !isMotorway(currentSegment)) {
 				currentSegment.getTurnType().setSkipToSpeak(true);
 			}
 
