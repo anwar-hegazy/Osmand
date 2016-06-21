@@ -471,6 +471,12 @@ public class RouteResultPreparation {
 			RouteSegmentResult currentSegment = result.get(i);
 			TurnType currentTurn = currentSegment.getTurnType();
 			dist += currentSegment.getDistance();
+
+			//Issue 2571: Ignore turnType.C if immediately followed by another turn in non-motorway cases, as these likely belong to the very same intersection
+			if (nextSegment != null && nextSegm.getTurnType() != TurnType.C && currentSegment.getTurnType() == TurnType.C && (dist <= 70) && !isMotorway(currentSegment)) {
+				currentSegment.getTurnType().setSkipToSpeak(true);
+			}
+
 			if (currentTurn == null || currentTurn.getLanes() == null) {
 				// skip
 			} else {
